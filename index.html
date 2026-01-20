@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Super Rank Free Mod – Nam2Dz </title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{
+  margin:0;font-family:Arial,Helvetica,sans-serif;
+  background:linear-gradient(135deg,#06203a,#0b4f8a);
+  color:#fff;text-align:center;overflow-x:hidden
+}
+.header{
+  padding:18px;background:#041b33;
+  box-shadow:0 0 25px rgba(0,170,255,.45)
+}
+.logo{
+  font-size:28px;font-weight:900;color:#66dcff;
+  text-shadow:0 0 16px rgba(102,220,255,.8)
+}
+.sub{font-size:13px;color:#bfefff;margin-top:4px}
+.card{
+  width:360px;max-width:92%;margin:38px auto;
+  background:rgba(0,0,0,.35);border-radius:18px;padding:24px;
+  box-shadow:0 0 28px rgba(0,170,255,.45);
+  animation:pulse 2.8s infinite alternate
+}
+@keyframes pulse{
+  from{box-shadow:0 0 16px rgba(0,170,255,.35)}
+  to{box-shadow:0 0 36px rgba(0,170,255,.7)}
+}
+input{
+  width:100%;padding:12px;border:none;border-radius:12px;
+  margin-bottom:12px;font-size:15px
+}
+button{
+  width:100%;padding:13px;border:none;border-radius:12px;
+  font-size:16px;background:#39cfff;color:#00233d;
+  font-weight:bold;cursor:pointer
+}
+button:disabled{opacity:.6}
+.note{font-size:12px;color:#cdefff;margin-bottom:10px}
+#loading,#success{display:none;margin-top:14px}
+.progress{background:#0a2e55;border-radius:10px;overflow:hidden}
+.bar{height:14px;width:0%;
+  background:linear-gradient(90deg,#39cfff,#9ff1ff)}
+#percent{font-weight:bold}
+.feed{
+  margin-top:18px;text-align:left;font-size:13px;
+  background:rgba(0,0,0,.25);padding:12px;border-radius:12px
+}
+.feed b{color:#9fe7ff}
+.feed div{margin:6px 0;color:#cfefff}
+#toast{
+  position:fixed;top:18px;left:50%;transform:translateX(-50%);
+  background:#052646;padding:10px 16px;border-radius:12px;
+  box-shadow:0 10px 25px rgba(0,0,0,.5);
+  display:none;z-index:10000;font-size:14px
+}
+#video{display:none;position:fixed;inset:0;background:#000;z-index:99999}
+#video iframe{width:100%;height:100%}
+.footer{font-size:11px;color:#bfefff;margin-top:14px;opacity:.75}
+.shake{animation:shake .15s infinite}
+@keyframes shake{
+  0%{transform:translateX(0)}
+  25%{transform:translateX(-1px)}
+  50%{transform:translateX(1px)}
+  75%{transform:translateX(-1px)}
+  100%{transform:translateX(0)}
+}
+</style>
+</head>
+
+<body>
+<div class="header">
+  <div class="logo">NAM2DZ MOD </div>
+  <div class="sub">Super Rank Free Mod|Nam2D✅</div>
+</div>
+
+<div class="card" id="card">
+  <h2>Nhận Super Rank</h2>
+  <div class="note">Hệ thống xử lý tự động </div>
+
+  <input id="username" placeholder="Nhập tên người chơi (≥ 3 ký tự)">
+
+  <button id="btn" onclick="start()">NHẬN SUPER RANK</button>
+
+  <div id="loading">
+    <p id="status">Đang tìm tên người chơi…</p>
+    <div class="progress"><div class="bar" id="bar"></div></div>
+    <p id="percent">0%</p>
+  </div>
+
+  <div id="success">
+    <h3>🎉 HOÀN TẤT</h3>
+    <p id="successText"></p>
+  </div>
+
+  <div class="feed" id="feed">
+    <b>🔔 Người vừa nhận Super Rank:</b>
+  </div>
+
+  <div class="footer">Đăng kí kênh Nam2Dz
+https://www.youtube.com/@Nam2Dz</div>
+</div>
+
+<div id="toast"></div>
+
+<div id="video">
+  <iframe id="yt" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+</div>
+
+<script>
+// ===== Helpers =====
+const $=id=>document.getElementById(id);
+function toast(t){
+  const x=$("toast");x.innerText=t;x.style.display="block";
+  clearTimeout(x._t);x._t=setTimeout(()=>x.style.display="none",2600);
+}
+
+// ===== Name pool (VN + game, hoa/thường, không trùng) =====
+const pool=[
+  "zZ_H1H4_Zz","Vn_MaiDinh_Zz","AnhHuy2K7rT",
+  "QuangMinhX","Hoang_NamZ","SowerZ",
+  "TiGer_Vn","MinhAnhQ","Zz_ThanhDat_Zz"
+];
+let used=[];
+
+// ===== Feed init: 3 dòng có sẵn =====
+function pushFeed(name){
+  const d=document.createElement("div");
+  d.innerText=`• ${name} vừa nhận Super Rank`;
+  $("feed").appendChild(d);
+  if($("feed").children.length>4) $("feed").removeChild($("feed").children[1]);
+}
+["zZ_H1H4_Zz","Vn_MaiDinh_Zz","AnhHuy2K7rT"].forEach(pushFeed);
+
+// ===== Auto feed =====
+setInterval(()=>{
+  if(used.length===pool.length) used=[];
+  let n;
+  do{ n=pool[Math.floor(Math.random()*pool.length)]; }
+  while(used.includes(n));
+  used.push(n);
+  pushFeed(n);
+  toast(`🔔 ${n} vừa nhận Super Rank`);
+},4200);
+
+// ===== Start =====
+function start(){
+  const user=$("username").value.trim();
+  if(user.length<3 || /^\d+$/.test(user)){
+    alert("Tên không hợp lệ! (≥3 ký tự, không chỉ số)");
+    return;
+  }
+  $("btn").disabled=true;
+  $("loading").style.display="block";
+  toast(`🔍 Đã tìm thấy người chơi ${user}`);
+
+  let i=0;
+  const bar=$("bar"),percent=$("percent"),status=$("status"),card=$("card");
+
+  const run=setInterval(()=>{
+    let step=(i>85&&i<95)?1:(Math.floor(Math.random()*2)+1);
+    i=Math.min(100,i+step);
+    bar.style.width=i+"%";percent.innerText=i+"%";
+
+    if(i<25) status.innerText="Xác minh người chơi…";
+    else if(i<55) status.innerText="Đang xử lý Super Rank…";
+    else if(i<80) status.innerText="Đồng bộ hệ thống…";
+    else if(i<95) status.innerText="Hoàn tất giao dịch…";
+    else status.innerText="Sắp xong…";
+
+    if(i>88&&i<99) card.classList.add("shake");
+    else card.classList.remove("shake");
+
+    if(i===35) toast("🔐 Xác minh thành công");
+    if(i===70) toast("📡 Đồng bộ hoàn tất");
+
+    if(i>=100){
+      clearInterval(run);
+      $("success").style.display="block";
+      $("successText").innerText=`${user} đã nhận Super Rank`;
+      toast("✅ Quy trình hoàn tất");
+
+      setTimeout(()=>{
+        $("video").style.display="block";
+        $("yt").src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&mute=1&playsinline=1";
+      },1200);
+    }
+  },130); // chậm & chân thực
+}
+</script>
+</body>
+</html>
